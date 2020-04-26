@@ -117,28 +117,14 @@ class JTTMain extends JFrame implements ActionListener
 	JButton setcolor;
 	JTextField input;
 	Backdrop gameboard;
-	JButton playagain;
-	JButton exit;
 	
 	public void actionPerformed(ActionEvent e)
 	{
-		if(e.getSource()==setcolor)
-		{
-			String x=input.getText();
-			int i=Integer.parseInt(x);
-			gameboard.setcolor(i-1);
-			// forces a redraw of the gameboard art object
-			gameboard.repaint();
-		}
-		else if(e.getSource()==playagain)
-		{
-			JTTMain submarine=new JTTMain();
-		}
-		else if(e.getSource()==exit)
-		{
-			System.out.println("Hope you had fun!");
-			System.exit(0);
-		}
+		String x=input.getText();
+		int i=Integer.parseInt(x);
+		gameboard.setcolor(i-1);
+		// forces a redraw of the gameboard art object
+		gameboard.repaint();
 	}
 	
 	public JTTMain()
@@ -147,18 +133,14 @@ class JTTMain extends JFrame implements ActionListener
 		setSize(1100,700);
 		addWindowListener(new Closer());
 		
-		header=new JLabel("Welcome to Jerry Tac Toe! Have fun playing. But be" +
-							" warned: you are no match for Jerry!");
+		header=new JLabel("Welcome to JTTMain Tac Toe. Have fun playing. But be" +
+							" warned: you're going down! You are no match for JTTMain!");
 		instruction=new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor=new JButton("   Submit Move   ");
 		input=new JTextField("");
-		playagain=new JButton("Play Again/Reset");
-		exit=new JButton("  Exit  ");
 		gameboard=new Backdrop();
 		
 		setcolor.addActionListener(this);
-		playagain.addActionListener(this);
-		exit.addActionListener(this);
 		
 		// put stuff in the window
 		Container glass=getContentPane();
@@ -173,8 +155,6 @@ class JTTMain extends JFrame implements ActionListener
 		JPanel top=new JPanel();
 		top.setLayout(new BorderLayout());
 		top.add(header,"Center");
-		top.add(playagain,"West");
-		top.add(exit,"East");
 		
 		glass.add(top, "North");
 		glass.add(gameboard, "Center");
