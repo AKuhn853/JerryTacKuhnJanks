@@ -85,7 +85,7 @@ class JTTMain extends JFrame implements ActionListener
 			g.setColor(Color.gray);
 			g.fillRect(0,0, 1100,600);
 			// lines
-			g.setColor(Color.green);
+			g.setColor(Color.black);
 			g.drawLine(175, 125, 875, 125);
 			g.drawLine(175, 125, 875, 425);
 			g.drawLine(175, 125, 525, 425);
