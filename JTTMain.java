@@ -4,6 +4,10 @@ import java.awt.*;
 
 class JTTMain extends JFrame implements ActionListener
 {
+	public boolean gameWon() { return false; }
+	public boolean gameLost() { return false; }
+	public boolean gameTie() { return false; }
+	
 	class Closer extends WindowAdapter
 	{
 		public void windowClosing(WindowEvent e)
@@ -117,13 +121,14 @@ class JTTMain extends JFrame implements ActionListener
 	JButton setcolor;
 	JTextField input;
 	Backdrop gameboard;
-	JLabel endofgame;
+	JLabel youwon;
+	JLabel youlost;
+	JLabel tie;
 	JButton playagain;
 	JButton exit;
 	boolean win;
 	boolean lose;
 	boolean draw;
-	// haha
 	
 	public void actionPerformed(ActionEvent e)
 	{
@@ -157,7 +162,9 @@ class JTTMain extends JFrame implements ActionListener
 		instruction=new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor=new JButton("   Submit Move   ");
 		input=new JTextField("");
-		endofgame=new JLabel("The game has ended! There's a button on your left to try again (fruitlessly) or if you've had enough click exit.");
+		youwon=new JLabel("You won! Jerry bows down to you. Look left to play again or right to exit.");
+		youlost=new JLabel("You lost! Jerry laughs in your face. Look left to play again or right to exit.");
+		tie=new JLabel("The game has ended in a tie! Jerry has shows you mercy just this once. Look left to play again or right to exit.");
 		playagain=new JButton("Play Again/Reset");
 		exit=new JButton("  Exit  ");
 		gameboard=new Backdrop();
@@ -179,12 +186,28 @@ class JTTMain extends JFrame implements ActionListener
 		JPanel top=new JPanel();
 		top.setLayout(new BorderLayout());
 		top.add(header,"Center");
-		win=true;
-		if(win==true | lose==true | draw==true)
+		
+		if(gameWon()==true)
 		{
-			top.add(endofgame, "Center");
+			top.add(youwon, "Center");
 			top.add(playagain,"West");
 			top.add(exit,"East");
+		}
+		
+		else if(gameLost()==true)
+		{
+			top.add(youlost, "Center");
+			top.add(playagain,"West");
+			top.add(exit,"East");
+			
+		}
+		
+		else if(gameTie()==true)
+		{
+			top.add(tie, "Center");
+			top.add(playagain,"West");
+			top.add(exit,"East");
+			
 		}
 		
 		glass.add(top, "North");
