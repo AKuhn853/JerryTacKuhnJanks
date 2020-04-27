@@ -162,9 +162,9 @@ class JTTMain extends JFrame implements ActionListener
 		instruction=new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor=new JButton("   Submit Move   ");
 		input=new JTextField("");
-		youwon=new JLabel("You won! Jerry bows down to you. Look left to play again or right to exit.");
-		youlost=new JLabel("You lost! Jerry laughs in your face. Look left to play again or right to exit.");
-		tie=new JLabel("The game has ended in a tie! Jerry has shows you mercy just this once. Look left to play again or right to exit.");
+		youwon=new JLabel("You won! Jerry bows down to you. Click the left button to play again or right to exit.");
+		youlost=new JLabel("You lost! Jerry laughs in your face. Click the left button to play again or right to exit.");
+		tie=new JLabel("The game has ended in a tie! Jerry has shown you mercy just this once. Look left to play again or right to exit.");
 		playagain=new JButton("Play Again/Reset");
 		exit=new JButton("  Exit  ");
 		gameboard=new Backdrop();
