@@ -117,8 +117,12 @@ class JTTMain extends JFrame implements ActionListener
 	JButton setcolor;
 	JTextField input;
 	Backdrop gameboard;
+	JLabel endofgame;
 	JButton playagain;
 	JButton exit;
+	boolean win;
+	boolean lose;
+	boolean draw;
 	
 	public void actionPerformed(ActionEvent e)
 	{
@@ -143,7 +147,7 @@ class JTTMain extends JFrame implements ActionListener
 	
 	public JTTMain()
 	{
-		setTitle("JTTMain Tac Toe: Tik Tac Toe but better!");
+		setTitle("Jerry Tac Toe: Tik Tac Toe but better!");
 		setSize(1100,700);
 		addWindowListener(new Closer());
 		
@@ -152,6 +156,7 @@ class JTTMain extends JFrame implements ActionListener
 		instruction=new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor=new JButton("   Submit Move   ");
 		input=new JTextField("");
+		endofgame=new JLabel("The game has ended! There's a button on your left to try again (fruitlessly) or if you've had enough click exit.");
 		playagain=new JButton("Play Again/Reset");
 		exit=new JButton("  Exit  ");
 		gameboard=new Backdrop();
@@ -173,8 +178,13 @@ class JTTMain extends JFrame implements ActionListener
 		JPanel top=new JPanel();
 		top.setLayout(new BorderLayout());
 		top.add(header,"Center");
-		top.add(playagain,"West");
-		top.add(exit,"East");
+		win=true;
+		if(win==true | lose==true | draw==true)
+		{
+			top.add(endofgame, "Center");
+			top.add(playagain,"West");
+			top.add(exit,"East");
+		}
 		
 		glass.add(top, "North");
 		glass.add(gameboard, "Center");
