@@ -123,6 +123,7 @@ class JTTMain extends JFrame implements ActionListener
 	boolean win;
 	boolean lose;
 	boolean draw;
+	// haha
 	
 	public void actionPerformed(ActionEvent e)
 	{
