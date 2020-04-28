@@ -73,7 +73,7 @@ class JTTMain extends JFrame implements ActionListener {
 			g.drawLine(175, 125, 875, 425);
 			g.drawLine(175, 125, 525, 425);
 			g.drawLine(525, 125, 175, 425);
-			g.drawLine(525, 125, 525, 425);
+			g.drawLine(350, 275, 700, 275);
 			g.drawLine(525, 125, 875, 425);
 			g.drawLine(875, 125, 175, 125);
 			g.drawLine(875, 125, 175, 425);
