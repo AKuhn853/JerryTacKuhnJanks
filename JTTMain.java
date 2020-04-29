@@ -111,105 +111,308 @@ class JTTMain extends JFrame implements ActionListener {
 	JPanel bottom;
 	JPanel top;
 
+	// Establishing Player versus Computer
+	char player = 'P';
+	char computer = 'C';
+
+	// Board Work
+	char[] b = new char[10];
+
+	public void clearBoard() {
+		for (int i = 1; i < 10; i++) {
+			b[i] = '_';
+		}
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == setcolor && gameWon() == false && gameLost() == false) {
 			top.remove(cpufirst);
 			header.setText("Checking possible dub...");
 			String x = input.getText();
 			int i = Integer.parseInt(x);
-			b[i] = 1;
+			b[i] = 'P';
 			gameboard.setcolor(i - 1);
 			// forces a redraw of the gameboard art object
 			gameboard.repaint();
-
 			CPUturn();
 		} else if (e.getSource() == playagain) {
-			//if(gameWon() == true | gameLost() == true | draw == true) {
-				JTTMain submarine = new JTTMain();
-			//}
+			// if(gameWon() == true | gameLost() == true | draw == true) {
+			JTTMain submarine = new JTTMain();
+			// }
 		} else if (e.getSource() == exit) {
-			//if(gameWon() == true) {
-				System.out.println("Hope you had fun!");
-				System.exit(0);
-			//}
+			// if(gameWon() == true) {
+			System.out.println("Hope you had fun!");
+			System.exit(0);
+			// }
 		} else if (e.getSource() == cpufirst) {
 			CPUturn();
 			top.remove(cpufirst);
 			header.setText("Checking possible dub...");
 		}
 
-		if(gameWon()) {
+		if (gameWon()) {
 			header.setText(youwon);
 			top.add(playagain, "West");
-			top.add(exit,"East");
+			top.add(exit, "East");
 		}
 
-		if(gameLost()) {
+		if (gameLost()) {
 			header.setText(youlost);
 			top.add(playagain, "West");
-			top.add(exit,"East");
+			top.add(exit, "East");
 		}
 
-		if(draw==true) {
+		if (draw == true) {
 			header.setText(tie);
 			top.add(playagain, "West");
-			top.add(exit,"East");
+			top.add(exit, "East");
 		}
 	}
 
-	// Board Work
-	int[] b = new int[10];
+	public boolean movesLeft(char[] b) {
+		for (int i = 1; i < 10; i++) {
+			if (b[i] == '_') {
+				return true;
+			}
+		}
+		return false;
+	}
 
+	public int evaluate(char[] b) {
+		// There are nine different ways to win
+		// 1-2-3
+		if (b[1] == b[2] && b[2] == b[3]) {
+			if (b[1] == computer)
+				return +10;
+			else if (b[1] == player)
+				return -10;
+		}
+		// 1-5-9
+		if (b[1] == b[5] && b[5] == b[9]) {
+			if (b[1] == computer)
+				return +10;
+			else if (b[1] == player)
+				return -10;
+		}
+		// 1-4-8
+		if (b[1] == b[4] && b[4] == b[8]) {
+			if (b[1] == computer)
+				return +10;
+			else if (b[1] == player)
+				return -10;
+		}
+		// 2-4-7
+		if (b[2] == b[4] && b[4] == b[7]) {
+			if (b[2] == computer)
+				return +10;
+			else if (b[2] == player)
+				return -10;
+		}
+		// 2-6-9
+		if (b[2] == b[6] && b[6] == b[9]) {
+			if (b[2] == computer)
+				return +10;
+			else if (b[2] == player)
+				return -10;
+		}
+		// 3-5-7
+		if (b[3] == b[5] && b[5] == b[7]) {
+			if (b[3] == computer)
+				return +10;
+			else if (b[3] == player)
+				return -10;
+		}
+		// 3-6-8
+		if (b[3] == b[6] && b[6] == b[8]) {
+			if (b[3] == computer)
+				return +10;
+			else if (b[3] == player)
+				return -10;
+		}
+		// 4-5-6
+		if (b[4] == b[5] && b[5] == b[6]) {
+			if (b[4] == computer)
+				return +10;
+			else if (b[4] == player)
+				return -10;
+		}
+		// 7-8-9
+		if (b[7] == b[8] && b[8] == b[9]) {
+			if (b[8] == computer)
+				return +10;
+			else if (b[8] == player)
+				return -10;
+		}
+		return 0;
+	}
+
+	// Minimax function that considers all possible ways game can go
+	// Returns the value of the board
+	public int minimax(char[] b, int depth, boolean isMax) {
+		int score = evaluate(b);
+
+		// If Max has won, return evaluated score
+		if (score == 10) {
+			return score;
+		}
+
+		// If Min has won the game return score
+		if (score == -10) {
+			return score;
+		}
+
+		// // If no more moves exist at all we show that the game is a tie
+		if (movesLeft(b) == false) {
+			return 0;
+		}
+
+		// Maximizer's move
+		if (isMax) {
+			// Finding the best move
+			int best = -1000;
+
+			// Traverse all cells
+			for (int i = 1; i < 10; i++) {
+				// if there is a move to be made
+				if (b[i] == '_') {
+					// Make it
+					b[i] = computer;
+
+					// Call minimax recursively and chose the minimum value
+					best = Math.max(best, minimax(b, depth + 1, !isMax));
+
+					// Undo our move
+					b[i] = '_';
+				}
+			}
+			return (best);
+		}
+		// If this is minimizer's move
+		else {
+			int best = 1000;
+
+			// Traverse all cells
+			for (int i = 1; i < 10; i++) {
+				// if there is a move to be made
+				if (b[i] == '_') {
+					// Make it
+					b[i] = player;
+
+					// Evaluate the move
+					best = Math.min(best, minimax(b, depth + 1, !isMax));
+
+					// Undo our move
+					b[i] = '_';
+				}
+			}
+			return (best);
+		}
+	}
+
+	// This function will consider all possible moves and return the
+	// best possible move
+	public int findBestMove(char[] b) {
+		int bestVal = -1000;
+		int bestMove = -1;
+		// Traverse all cells, evaluate minimax function for all empty
+		// cells. And return the cell with optimal value.
+		for (int i = 1; i < 10; i++) {
+			// Confirm empty cell
+			if (b[i] == '_') {
+				// Make our move
+				b[i] = computer;
+
+				// Compute evaluation of the move
+				int moveEval = minimax(b, 0, false);
+
+				// Undo our move
+				b[i] = '_';
+
+				// If the evaluation of our current move is more than
+				// the best value so far, then update best
+				// System.out.println("Current Move Value: " + moveEval);
+				// System.out.println("Best Move Value: " + bestVal);
+				if (moveEval >= bestVal) {
+					bestMove = i;
+					bestVal = moveEval;
+				}
+			}
+		}
+		return bestMove;
+	}
+
+	// Advanced Minimax CPUTurn code
 	public void CPUturn() {
 		if (gameWon() == true) {
 			return;
 		}
+
+		char[] board = new char[10];
+
 		for (int i = 1; i < 10; i++) {
-			if (b[i] == 0) {
-				b[i] = 2;
-				gameboard.setcolorCPU(i - 1);
-				gameboard.repaint();
-				gameLost();
-				return;
-			}
+			board[i] = b[i];
 		}
-		draw = true;
+
+		int bestMove = findBestMove(board);
+
+		b[bestMove] = 'C';
+		gameboard.setcolorCPU(bestMove - 1);
+		gameboard.repaint();
 	}
 
+	// Simple AI
+	// public void CPUturn() {
+	// if (gameWon() == true) {
+	// return;
+	// }
+	// for (int i = 1; i < 10; i++) {
+	// if (b[i] == 0) {
+	// b[i] = 2;
+	// gameboard.setcolorCPU(i - 1);
+	// gameboard.repaint();
+	// gameLost();
+	// return;
+	// }
+	// }
+	// draw = true;
+	// }
+
 	public boolean gameWon() {
-		if ((b[1] == 1 && b[2] == 1 && b[3] == 1) || (b[1] == 1 && b[4] == 1 && b[8] == 1)
-				|| (b[1] == 1 && b[5] == 1 && b[9] == 1) || (b[2] == 1 && b[4] == 1 && b[7] == 1)
-				|| (b[2] == 1 && b[6] == 1 && b[9] == 1) || (b[3] == 1 && b[5] == 1 && b[7] == 1)
-				|| (b[3] == 1 && b[6] == 1 && b[8] == 1) || (b[4] == 1 && b[5] == 1 && b[6] == 1)
-				|| (b[7] == 1 && b[8] == 1 && b[9] == 1)) {
+		if ((b[1] == 'P' && b[2] == 'P' && b[3] == 'P') || (b[1] == 'P' && b[4] == 'P' && b[8] == 'P')
+				|| (b[1] == 'P' && b[5] == 'P' && b[9] == 'P') || (b[2] == 'P' && b[4] == 'P' && b[7] == 'P')
+				|| (b[2] == 'P' && b[6] == 'P' && b[9] == 'P') || (b[3] == 'P' && b[5] == 'P' && b[7] == 'P')
+				|| (b[3] == 'P' && b[6] == 'P' && b[8] == 'P') || (b[4] == 'P' && b[5] == 'P' && b[6] == 'P')
+				|| (b[7] == 'P' && b[8] == 'P' && b[9] == 'P')) {
 			return true;
 		} else
 			return false;
 	}
 
 	public boolean gameLost() {
-		if ((b[1] == 2 && b[2] == 2 && b[3] == 2) || (b[1] == 2 && b[4] == 2 && b[8] == 2)
-				|| (b[1] == 2 && b[5] == 2 && b[9] == 2) || (b[2] == 2 && b[4] == 2 && b[7] == 2)
-				|| (b[2] == 2 && b[6] == 2 && b[9] == 2) || (b[3] == 2 && b[5] == 2 && b[7] == 2)
-				|| (b[3] == 2 && b[6] == 2 && b[8] == 2) || (b[4] == 2 && b[5] == 2 && b[6] == 2)
-				|| (b[7] == 2 && b[8] == 2 && b[9] == 2)) {
+		if ((b[1] == 'C' && b[2] == 'C' && b[3] == 'C') || (b[1] == 'C' && b[4] == 'C' && b[8] == 'C')
+				|| (b[1] == 'C' && b[5] == 'C' && b[9] == 'C') || (b[2] == 'C' && b[4] == 'C' && b[7] == 'C')
+				|| (b[2] == 'C' && b[6] == 'C' && b[9] == 'C') || (b[3] == 'C' && b[5] == 'C' && b[7] == 'C')
+				|| (b[3] == 'C' && b[6] == 'C' && b[8] == 'C') || (b[4] == 'C' && b[5] == 'C' && b[6] == 'C')
+				|| (b[7] == 'C' && b[8] == 'C' && b[9] == 'C')) {
 			return true;
 		} else
 			return false;
 	}
 
 	public JTTMain() {
-		draw=false;
+		// Ensured board is clear before beginning game.
+		clearBoard();
+		draw = false;
 		setTitle("Jerry Tac Toe: Tik Tac Toe but better!");
 		setSize(1100, 700);
 		addWindowListener(new Closer());
 
 		cpufirst = new JButton("CPU Goes First");
-		header = new JLabel(" Welcome to the game! Best of luck, but be warned: you are no match for Jerry!"+
-								" Press the button to your left if you would like Jerry to go first... otherwise make your move!");
-		youwon="You won! Jerry bows down to you. Look left to play again or right to go bye bye.";
-		youlost="You lost! Jerry laughs in your face. Look left to play again or right to go bye bye.";
-		tie="You tied! Jerry showed you mercy just this one time. Look left to play again or right to go bye bye.";
+		header = new JLabel(" Welcome to the game! Best of luck, but be warned: you are no match for Jerry!"
+				+ " Press the button to your left if you would like Jerry to go first... otherwise make your move!");
+		youwon = "You won! Jerry bows down to you. Look left to play again or right to go bye bye.";
+		youlost = "You lost! Jerry laughs in your face. Look left to play again or right to go bye bye.";
+		tie = "You tied! Jerry showed you mercy just this one time. Look left to play again or right to go bye bye.";
 		instruction = new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor = new JButton("   Submit Move   ");
 		input = new JTextField("");
@@ -235,7 +438,7 @@ class JTTMain extends JFrame implements ActionListener {
 		top = new JPanel();
 		top.setLayout(new BorderLayout());
 		top.add(header, "Center");
-		top.add(cpufirst,"West");
+		top.add(cpufirst, "West");
 
 		glass.add(top, "North");
 		glass.add(gameboard, "Center");
