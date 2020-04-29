@@ -106,7 +106,6 @@ class JTTMain extends JFrame implements ActionListener {
 	String tie;
 	JButton playagain;
 	JButton exit;
-	boolean draw;
 	JButton cpufirst;
 	JPanel bottom;
 	JPanel top;
@@ -134,9 +133,10 @@ class JTTMain extends JFrame implements ActionListener {
 			gameboard.setcolor(i - 1);
 			// forces a redraw of the gameboard art object
 			gameboard.repaint();
-			CPUturn();
+			if(gameTie() == false)
+				CPUturn();
 		} else if (e.getSource() == playagain) {
-			// if(gameWon() == true | gameLost() == true | draw == true) {
+			// if(gameWon() == true | gameLost() == true | gameTie == true) {
 			JTTMain submarine = new JTTMain();
 			// }
 		} else if (e.getSource() == exit) {
@@ -162,7 +162,7 @@ class JTTMain extends JFrame implements ActionListener {
 			top.add(exit, "East");
 		}
 
-		if (draw == true) {
+		if (gameTie()) {
 			header.setText(tie);
 			top.add(playagain, "West");
 			top.add(exit, "East");
@@ -362,19 +362,18 @@ class JTTMain extends JFrame implements ActionListener {
 
 	// Simple AI
 	// public void CPUturn() {
-	// if (gameWon() == true) {
-	// return;
-	// }
-	// for (int i = 1; i < 10; i++) {
-	// if (b[i] == 0) {
-	// b[i] = 2;
-	// gameboard.setcolorCPU(i - 1);
-	// gameboard.repaint();
-	// gameLost();
-	// return;
-	// }
-	// }
-	// draw = true;
+		// if (gameWon() == true) {
+			// return;
+		// }
+		// for (int i = 1; i < 10; i++) {
+			// if (b[i] == 0) {
+				// b[i] = 2;
+				// gameboard.setcolorCPU(i - 1);
+				// gameboard.repaint();
+				// gameLost();
+				// return;
+			// }
+		// }
 	// }
 
 	public boolean gameWon() {
@@ -399,10 +398,17 @@ class JTTMain extends JFrame implements ActionListener {
 			return false;
 	}
 
+	public boolean gameTie() {
+		if (b[1] != '_' && b[2] != '_' && b[3] != '_' && b[4] != '_' && b[5] != '_' && b[6] != '_' && b[7] != '_' &&
+			b[8] != '_' && b[9] != '_')
+			return true;
+		else
+			return false;
+	}
+
 	public JTTMain() {
 		// Ensured board is clear before beginning game.
 		clearBoard();
-		draw = false;
 		setTitle("Jerry Tac Toe: Tik Tac Toe but better!");
 		setSize(1100, 700);
 		addWindowListener(new Closer());
