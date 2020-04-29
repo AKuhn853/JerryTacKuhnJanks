@@ -101,31 +101,59 @@ class JTTMain extends JFrame implements ActionListener {
 	JButton setcolor;
 	JTextField input;
 	Backdrop gameboard;
-	JLabel youwon;
-	JLabel youlost;
-	JLabel tie;
+	String youwon;
+	String youlost;
+	String tie;
 	JButton playagain;
 	JButton exit;
 	boolean draw;
+	JButton cpufirst;
+	JPanel bottom;
+	JPanel top;
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == setcolor) {
+		if (e.getSource() == setcolor && gameWon() == false && gameLost() == false) {
+			top.remove(cpufirst);
+			header.setText("Checking possible dub...");
 			String x = input.getText();
 			int i = Integer.parseInt(x);
 			b[i] = 1;
 			gameboard.setcolor(i - 1);
 			// forces a redraw of the gameboard art object
 			gameboard.repaint();
+
 			CPUturn();
 		} else if (e.getSource() == playagain) {
-			if(gameWon() == true | gameLost() == true | draw == true) {
+			//if(gameWon() == true | gameLost() == true | draw == true) {
 				JTTMain submarine = new JTTMain();
-			}
+			//}
 		} else if (e.getSource() == exit) {
-			if(gameWon() == true) {
+			//if(gameWon() == true) {
 				System.out.println("Hope you had fun!");
 				System.exit(0);
-			}
+			//}
+		} else if (e.getSource() == cpufirst) {
+			CPUturn();
+			top.remove(cpufirst);
+			header.setText("Checking possible dub...");
+		}
+
+		if(gameWon()) {
+			header.setText(youwon);
+			top.add(playagain, "West");
+			top.add(exit,"East");
+		}
+
+		if(gameLost()) {
+			header.setText(youlost);
+			top.add(playagain, "West");
+			top.add(exit,"East");
+		}
+
+		if(draw==true) {
+			header.setText(tie);
+			top.add(playagain, "West");
+			top.add(exit,"East");
 		}
 	}
 
@@ -166,8 +194,8 @@ class JTTMain extends JFrame implements ActionListener {
 				|| (b[3] == 2 && b[6] == 2 && b[8] == 2) || (b[4] == 2 && b[5] == 2 && b[6] == 2)
 				|| (b[7] == 2 && b[8] == 2 && b[9] == 2)) {
 			return true;
-		}
-		return false;
+		} else
+			return false;
 	}
 
 	public JTTMain() {
@@ -176,36 +204,38 @@ class JTTMain extends JFrame implements ActionListener {
 		setSize(1100, 700);
 		addWindowListener(new Closer());
 
-		header = new JLabel(
-				"Welcome to Jerry Tac Toe! Have fun playing. But be" + " warned: you are no match for Jerry!");
-		youwon=new JLabel("You won! Jerry bows down to you. Look left to play again or right to exit.");
-		youlost=new JLabel("You lost! Jerry laughs in your face. Look left to play again or right to exit.");
+		cpufirst = new JButton("CPU Goes First");
+		header = new JLabel(" Welcome to the game! Best of luck, but be warned: you are no match for Jerry!"+
+								" Press the button to your left if you would like Jerry to go first... otherwise make your move!");
+		youwon="You won! Jerry bows down to you. Look left to play again or right to go bye bye.";
+		youlost="You lost! Jerry laughs in your face. Look left to play again or right to go bye bye.";
+		tie="You tied! Jerry showed you mercy just this one time. Look left to play again or right to go bye bye.";
 		instruction = new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor = new JButton("   Submit Move   ");
 		input = new JTextField("");
 		playagain = new JButton("Play Again/Reset");
-		exit = new JButton(" Exit ");
+		exit = new JButton(" Go Bye Bye ");
 		gameboard = new Backdrop();
 
 		setcolor.addActionListener(this);
 		playagain.addActionListener(this);
 		exit.addActionListener(this);
+		cpufirst.addActionListener(this);
 
 		// put stuff in the window
 		Container glass = getContentPane();
 		glass.setLayout(new BorderLayout()); // layout manager
 
-		JPanel bottom = new JPanel();
+		bottom = new JPanel();
 		bottom.setLayout(new BorderLayout());
 		bottom.add(instruction, "West");
 		bottom.add(input, "Center");
 		bottom.add(setcolor, "East");
 
-		JPanel top = new JPanel();
+		top = new JPanel();
 		top.setLayout(new BorderLayout());
 		top.add(header, "Center");
-		top.add(playagain,"West");
-		top.add(exit,"East");
+		top.add(cpufirst,"West");
 
 		glass.add(top, "North");
 		glass.add(gameboard, "Center");
