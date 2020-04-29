@@ -72,6 +72,7 @@ class JTTMain extends JFrame implements ActionListener {
 			g.drawLine(175, 125, 875, 125);
 			g.drawLine(175, 125, 875, 425);
 			g.drawLine(175, 125, 525, 425);
+			g.drawLine(175, 425, 875, 425);
 			g.drawLine(525, 125, 175, 425);
 			g.drawLine(350, 275, 700, 275);
 			g.drawLine(525, 125, 875, 425);
@@ -105,8 +106,6 @@ class JTTMain extends JFrame implements ActionListener {
 	JLabel tie;
 	JButton playagain;
 	JButton exit;
-	boolean win;
-	boolean lose;
 	boolean draw;
 
 	public void actionPerformed(ActionEvent e) {
@@ -119,10 +118,14 @@ class JTTMain extends JFrame implements ActionListener {
 			gameboard.repaint();
 			CPUturn();
 		} else if (e.getSource() == playagain) {
-			JTTMain submarine = new JTTMain();
+			if(gameWon() == true | gameLost() == true | draw == true) {
+				JTTMain submarine = new JTTMain();
+			}
 		} else if (e.getSource() == exit) {
-			System.out.println("Hope you had fun!");
-			System.exit(0);
+			if(gameWon() == true) {
+				System.out.println("Hope you had fun!");
+				System.exit(0);
+			}
 		}
 	}
 
@@ -142,8 +145,7 @@ class JTTMain extends JFrame implements ActionListener {
 				return;
 			}
 		}
-		System.out.println("It's a tie");
-		System.exit(0);
+		draw = true;
 	}
 
 	public boolean gameWon() {
@@ -152,31 +154,32 @@ class JTTMain extends JFrame implements ActionListener {
 				|| (b[2] == 1 && b[6] == 1 && b[9] == 1) || (b[3] == 1 && b[5] == 1 && b[7] == 1)
 				|| (b[3] == 1 && b[6] == 1 && b[8] == 1) || (b[4] == 1 && b[5] == 1 && b[6] == 1)
 				|| (b[7] == 1 && b[8] == 1 && b[9] == 1)) {
-			System.out.println("You Win");
-			System.exit(0);
 			return true;
 		} else
 			return false;
 	}
 
-	public void gameLost() {
+	public boolean gameLost() {
 		if ((b[1] == 2 && b[2] == 2 && b[3] == 2) || (b[1] == 2 && b[4] == 2 && b[8] == 2)
 				|| (b[1] == 2 && b[5] == 2 && b[9] == 2) || (b[2] == 2 && b[4] == 2 && b[7] == 2)
 				|| (b[2] == 2 && b[6] == 2 && b[9] == 2) || (b[3] == 2 && b[5] == 2 && b[7] == 2)
 				|| (b[3] == 2 && b[6] == 2 && b[8] == 2) || (b[4] == 2 && b[5] == 2 && b[6] == 2)
 				|| (b[7] == 2 && b[8] == 2 && b[9] == 2)) {
-			System.out.println("You Lose");
-			System.exit(0);
+			return true;
 		}
+		return false;
 	}
 
 	public JTTMain() {
+		draw=false;
 		setTitle("Jerry Tac Toe: Tik Tac Toe but better!");
 		setSize(1100, 700);
 		addWindowListener(new Closer());
 
 		header = new JLabel(
 				"Welcome to Jerry Tac Toe! Have fun playing. But be" + " warned: you are no match for Jerry!");
+		youwon=new JLabel("You won! Jerry bows down to you. Look left to play again or right to exit.");
+		youlost=new JLabel("You lost! Jerry laughs in your face. Look left to play again or right to exit.");
 		instruction = new JLabel("Enter the node you'd like to mark then press \"Submit Move\".");
 		setcolor = new JButton("   Submit Move   ");
 		input = new JTextField("");
@@ -201,6 +204,8 @@ class JTTMain extends JFrame implements ActionListener {
 		JPanel top = new JPanel();
 		top.setLayout(new BorderLayout());
 		top.add(header, "Center");
+		top.add(playagain,"West");
+		top.add(exit,"East");
 
 		glass.add(top, "North");
 		glass.add(gameboard, "Center");
