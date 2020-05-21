@@ -112,6 +112,7 @@ class JTTMain extends JFrame implements ActionListener {
 
 	// Establishing Player versus Computer
 	char player = 'P';
+	char initial = 'A';
 	char computer = 'C';
 
 	// Board Work
